@@ -1,0 +1,19 @@
+09.21 7:41 AM
+Steps of First Micro profile App
+
+ 1. create new project . Choose Java with Maven archetype . In archetype search Archetype using word like microprofile . You will get many archetypes .
+
+
+ Choose jakartaaee8 - payara - microprofile - archetype . Press OK 2. In pom.xml , in properties tag change if you are using java ee 8 < maven.compiler.source > 11 < / maven.compiler.source > maven.compiler.target > to < maven.compiler.source > 1.8 < / maven.compiler.source > maven.compiler.target > 3.2 if its is 2.x @GET Ann " . < maven.compiler.target > 11 < / < maven.compiler.target > 1.8 < /
+
+3. In Your ExampleService make following changes 
+@Path ( " / example " ) public class ExampleService { @GET @Produces ( MediaType.TEXT_PLAIN ) public String get ( ) { return " Hello , world ! of Micro Profile from Trial 
+
+4. Write the client interface . Make package client create a simple Java Interface Named ExampleClient 
+
+@Register RestClient ( baseUri = " http : // localhost : 8080 / Trial MicroApp / rest / example " ) public interface ExampleClient { @GET @Produces ( MediaType.TEXT_PLAIN ) public String get ( ) ; }
+
+5. How to invoke the client with a servlet in the same application create a simple servlet In the servlet , Inject the client as follows 
+
+@Inject 
+@RestClient ExampleClient ex ; Now using ex you can call all the methods listed in the client . like out.println ( " < h1 > Response : " + ex.get ( ) + " < / h1 > " ) ;
