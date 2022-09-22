@@ -1,0 +1,73 @@
+09.22 7:39 AM
+    var express = require('express');  
+    var app = express(); 
+    
+        //app.get("",function(){},function(){})
+    app.use("/",function(req, res, next) {  
+      console.log( req.method+"  " +req.url); 	
+      res.write("Hello1 M1\n"); 
+      next();  
+    });  
+
+    app.get('/', function(req, res,next) {  
+      res.write("Hello Express! R1 \n"); 
+	    next(); 
+    },function(req, res,next) {  
+      res.write('how r u? R2\n');
+      next(); 
+    }); 
+
+    app.get('/', function(req, res,next) {  
+      res.write('how r u? R3\n');
+      //res.end(); 
+      next(); 
+    }); 
+    app.post('/', function(req, res,next) {  
+      res.write('how r u? R3 POST\n');
+      //res.end(); 
+      next(); 
+    }); 
+    app.get('/page1/h*', function(req, res, next) {  
+      res.write('page1/hello\n');  
+      next();
+    }); 
+    app.get('/page1', function(req, res, next) {  
+      res.write('page1\n');  
+      next();
+    }); 
+    
+    app.get('/products/:name/:id', function(req, res,next) {
+    res.write('id: ' + req.params.id + ' and name: ' + req.params.name+"\n");
+    next();
+    });
+
+    var server = app.listen(8000);  
+    
+    app.use(function(req, res, next) {  
+      console.log('NEW %s %s', req.method, req.url); 	
+      res.write("NEW M2") ;
+      res.end()       
+    }); 
+//request handler: if multiple reqs(G,P) for one path (only 1 is called at a time)
+//middleware: multiple middleware for one path (all will be called. all req types. call next)
+//request handler will select exact path
+//middleware will select path and sub-routes
+//take care of response (res.write, res.send, res.end)
+
+
+
+Middleware routing
+var express = require('express');  
+var app = express(); 
+
+app.get('/products/:name/:id', function(req, res) {
+	  res.send('id: ' + req.params.id + ' and name: ' + req.params.name);
+	});
+
+app.get('/sales/h*', function(req, res) {  
+      res.write('sales/hello\n');  
+      res.end();
+    }); 
+
+
+app.listen(8000);
