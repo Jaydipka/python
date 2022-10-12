@@ -1,0 +1,220 @@
+entityframework webformapp
+```
+namespace CRUDFormApp
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+        }
+   =     productEntities productEntities = new productEntities();
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // TODO: This line of code loads data into the 'productDataSet.Product' table. You can move, or remove it, as needed.
+            this.productTableAdapter.Fill(this.productDataSet.Product);
+
+        }
+
+        private void insert_Click(object sender, EventArgs e)
+        {
+            Product product = new Product();
+            product.pname = textpname.Text;
+            product.prate = Convert.ToInt32(textprate.Text);
+            product.pweight = Convert.ToInt32(textpweight.Text);
+
+            productEntities.Products.Add(product);
+            productEntities.SaveChanges();
+
+            showdata();
+        }
+
+        public void showdata()
+        {
+            dataGridView1.DataSource = productEntities.Products.ToList();
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            textpid.Text = dataGridView1.SelectedRows[0].Cells[0].Value.ToString();
+            textpname.Text = dataGridView1.SelectedRows[0].Cells[1].Value.ToString();
+            textprate.Text = dataGridView1.SelectedRows[0].Cells[2].Value.ToString();
+            textpweight.Text = dataGridView1.SelectedRows[0].Cells[3].Value.ToString();
+        }
+
+        private void update_btn_Click(object sender, EventArgs e)
+        {
+            int pid = Convert.ToInt32(textpid.Text);
+
+            Product product = productEntities.Products.Find(pid);
+            product.pname = textpname.Text;
+            product.prate = Convert.ToInt32(textprate.Text);
+            product.pweight = Convert.ToInt32(textpweight.Text);
+            productEntities.SaveChanges();
+            showdata();
+        }
+
+        private void delete_btn_Click(object sender, EventArgs e)
+        {
+            int pid = Convert.ToInt32(textpid.Text);
+
+            Product product = productEntities.Products.Find(pid);
+            productEntities.Products.Remove(product);
+            productEntities.SaveChanges();
+            showdata();
+        }
+
+        private void search_btn_Click(object sender, EventArgs e)
+        {
+            //string name = textsearch.Text;
+            //dataGridView1.DataSource=(from Product in productDataSet.Product select new {
+              //  Product.pid,
+              //  Product.pname,
+              //  Product.prate,
+             //   Product.pweight
+           // })
+            
+        }
+    }
+}
+
+
+crudMVCAppEntityframework
+==
+write
+...
+namespace CrudMVCEntityApp.Controllers
+{
+    public class CustomerController : Controller
+    {
+        // GET: Customer/index
+        public ActionResult Index()
+        {
+            using(CustomerEntities db=new CustomerEntities())
+            {
+                return View(db.customers.ToList());
+            }
+            
+        }
+
+        // GET: Customer/Details/5
+        public ActionResult Details(int id)
+        {
+            using (CustomerEntities db = new CustomerEntities())
+            {
+                return View(db.customers.Where(x => x.id == id).FirstOrDefault());
+            }
+          
+        }
+
+        // GET: Customer/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Customer/Create
+        [HttpPost]
+        public ActionResult Create(customer customer)
+        {
+            try
+            {
+                // TODO: Add insert logic here
+                using(CustomerEntities db =new CustomerEntities())
+                {
+                    db.customers.Add(customer);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: Customer/Edit/5
+        public ActionResult Edit(int id)
+        {
+            using (CustomerEntities db = new CustomerEntities())
+            {
+                return View(db.customers.Where(x => x.id == id).FirstOrDefault());
+            }
+        }
+
+        // POST: Customer/Edit/5
+        [HttpPost]
+        public ActionResult Edit(int id, customer customer)
+        {
+            try
+            {
+                // TODO: Add update logic here
+                using (CustomerEntities db = new CustomerEntities())
+                {
+                    db.Entry(customer).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: Customer/Delete/5
+        public ActionResult Delete(int id)
+        {
+            using (CustomerEntities db = new CustomerEntities())
+            {
+                return View(db.customers.Where(x => x.id == id).FirstOrDefault());
+            }
+        }
+
+        // POST: Customer/Delete/5
+        [HttpPost]
+        public ActionResult Delete(int id, customer customer)
+        {
+            try
+            {
+                // TODO: Add delete logic here
+                using (CustomerEntities db = new CustomerEntities())
+                {
+                    customer = db.customers.Where(x => x.id == id).FirstOrDefault();
+                    db.customers.Remove(customer);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+    }
+}
+
+
+......
+Microsoft.VisualStudio.Web.CodeGeneration.Design
+
+Microsoft.EntityFrameworkCore.Tools
+
+Microsoft.EntityFrameworkCore.SqlServer
+
+Microsoft.VisualStudio.Web.CodeGeneration
+
+Microsoft.VisualStudio.Web.CodeGeneration.Util
+
+
+Scaffold-DbContext "Connection String;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+
+
+,
+  "ConnectionStrings": {
+    "DBConnectionStrings": "Connection String;"
+  }
+
+
+services.AddDbContext<DICTDBContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DBConnectionStrings")));
